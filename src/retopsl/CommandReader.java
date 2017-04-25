@@ -13,20 +13,20 @@ import java.util.ArrayList;
  * @author Santiago
  */
 public class CommandReader {
-
+    
     private final Scanner sc;
     private int digits[];
     private static final String endCommand = "0,0";
     private ArrayList<NumeroLCD> numeros;
     private final IntegerUtils intUtils = new IntegerUtils();
     private MonitorLCD monitor;
-
+    
     public CommandReader() {
         sc = new Scanner(System.in);
         numeros = new ArrayList<>();
         readCommand();
     }
-
+    
     private void readCommand() {
         String command = "";
         do {
@@ -37,18 +37,20 @@ public class CommandReader {
         monitor = new MonitorLCD(numeros);
         monitor.printMonitor();
     }
-
+    
     private void exec(String command) {
         int[] params;
-        try {
-            params = parseCommand(command);
-            NumeroLCD nLCD = createLCDNumber(params);
-            numeros.add(nLCD);
-        } catch (IllegalArgumentException e) {
-            System.err.println(e);
+        if (!command.equals(endCommand)) {
+            try {
+                params = parseCommand(command);
+                NumeroLCD nLCD = createLCDNumber(params);
+                numeros.add(nLCD);
+            } catch (IllegalArgumentException e) {
+                System.err.println(e);
+            }
         }
     }
-
+    
     private NumeroLCD createLCDNumber(int[] params) {
         int size = params[0];
         int numero = params[1];
@@ -56,13 +58,13 @@ public class CommandReader {
         NumeroLCD numLCD = new NumeroLCD(digits, size);
         return numLCD;
     }
-
+    
     private int[] parseCommand(String command) throws IllegalArgumentException {
         String[] params;
-
+        
         int tam;
         int numero;
-
+        
         if (!command.contains(",")) {
             throw new IllegalArgumentException("Cadena " + command
                     + " no contiene caracter ,");
@@ -104,13 +106,13 @@ public class CommandReader {
             throw new IllegalArgumentException("Parametro número [" + params[1]
                     + "] no es un número");
         }
-
+        
         int[] paramsInt = {tam, numero};
-
+        
         return paramsInt;
-
+        
     }
-
+    
     static boolean isNumeric(String cadena) {
         try {
             Integer.parseInt(cadena);
@@ -119,5 +121,5 @@ public class CommandReader {
             return false;
         }
     }
-
+    
 }
